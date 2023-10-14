@@ -1,0 +1,555 @@
+openapi: 3.1.0
+info:
+  title: "GymBuddy API"
+  version: 0.1.0
+  description: "The Back-End API for the GymBuddy React App"
+  license:
+    name: "MIT"
+    url: "https://spdx.org/licenses/MIT.html"
+  contact:
+    name: "Brooke Godbold"
+    url: "https://thunderfrost.com"
+
+servers:
+  - url: "http://localhost:8001"
+
+paths:
+  /gyms:
+    get:
+      summary: Get all of the gyms conforming to an optional search criteria
+      tags:
+        - gyms
+      parameters:
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+            example: sun
+      responses:
+        200:
+          description: A simplified list of gyms conforming to the search criteria
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Gyms"
+        500:
+          description: A server error
+
+    post:
+      summary: Add a new gym
+      tags:
+        - gyms
+      requestBody:
+        description: The details of the gym to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BasicGym"
+            examples:
+              citygym:
+                summary: An example of a gym called City Gym
+                value:
+                  name: City Gym
+                  address:
+                    line1: 123 Smith Close
+                    city: Night City
+                    county: Blake County
+                    postcode: AB5 CR7
+      responses:
+        201:
+          description: The newly created gym as it appears within the system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimplifiedGym"
+        400:
+          description: The gym was unable to be created
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/{id}:
+    get:
+      summary: Get a gym by ID
+      tags:
+        - gyms
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the gym to search for
+          schema:
+            type: integer
+            example: 0
+      responses:
+        200:
+          description: The detailed gym object returned for the given ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtendedGym"
+        400:
+          description: The gym was unable to be found
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/{id}/reviews:
+    post:
+      summary: Add a review to a given gym
+      tags:
+        - gyms
+        - reviews
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the gym to add the review to
+          schema:
+            type: integer
+            example: 0
+      requestBody:
+        description: The details of the review to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Review"
+            examples:
+              citygym:
+                summary: An example of a review
+                value:
+                  userId: 100
+                  rating: 8
+                  content: Integer luctus semper sollicitudin. Phasellus ex purus, facilisis eget mauris non, ultrices suscipit quam. Praesent imperdiet pharetra porttitor. Vestibulum laoreet velit sed risus malesuada convallis. Nam eros purus, placerat eu fringilla nec, malesuada et arcu. Nulla eleifend nisl eu purus pharetra
+      responses:
+        201:
+          description: The newly created review as it appears within the system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        400:
+          description: The review was unable to be created
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/{id}/equipment:
+    post:
+      summary: Add equipment to a given gym
+      tags:
+        - gyms
+        - equipment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the gym to add the equipment to
+          schema:
+            type: integer
+            example: 0
+      requestBody:
+        description: The details of the equipment to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Equipment"
+            examples:
+              citygym:
+                summary: An example of equipment
+                value:
+                  userId: 100
+                  name: "Rowing Machine"
+                  quality:
+                    userId: 100
+                    rating: 8
+      responses:
+        201:
+          description: The newly created equipment as it appears within the system
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        400:
+          description: The equipment was unable to be created
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/reviews/{id}:
+    get:
+      summary: Get a review by ID
+      tags:
+        - gyms
+        - reviews
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the review to search for
+          schema:
+            type: integer
+            example: 0
+      responses:
+        200:
+          description: The review object returned for the given ID
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        400:
+          description: The review was unable to be found
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+    patch:
+      summary: Vote on a review's usefulness
+      tags:
+        - gyms
+        - reviews
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the review to vote upon
+          schema:
+            type: integer
+            example: 0
+      requestBody:
+        description: The vote to be added or removed for the review
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Vote"
+            examples:
+              citygym:
+                summary: An example of a vote by UserId 100
+                value:
+                  userId: 100
+      responses:
+        201:
+          description: The review which was voted upon
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        400:
+          description: The vote was unable to be added or removed
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/equipment/{id}/quality:
+    put:
+      summary: Add or replace a quality review for a given piece of equipment
+      tags:
+        - gyms
+        - equipment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the equipment to add the quality review to
+          schema:
+            type: integer
+            example: 0
+      requestBody:
+        description: The details of the quality review
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Quality"
+            examples:
+              citygym:
+                summary: An example of a Quality Review
+                value:
+                  userId: 100
+                  rating: 8
+      responses:
+        201:
+          description: The equipment which the quality review was added to
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        400:
+          description: The quality review was unable to be created or replaced
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+  /gyms/equipment/{id}/accuracy:
+    put:
+      summary: Add or replace an accuracy review for a given piece of equipment
+      tags:
+        - gyms
+        - equipment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the equipment to add the accuracy review to
+          schema:
+            type: integer
+            example: 0
+      requestBody:
+        description: The details of the accuracy review
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Accuracy"
+            examples:
+              citygym:
+                summary: An example of an Accuracy Review
+                value:
+                  userId: 100
+                  isCorrect: true
+      responses:
+        201:
+          description: The equipment which the accuracy review was added to
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Equipment"
+        400:
+          description: The accuracy review was unable to be created or replaced
+          content:
+            application.json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        500:
+          description: A server error
+
+tags:
+  name: Gyms
+  description: The gyms managing API
+
+components:
+  schemas:
+    Error:
+      type: array
+      description: A list of the errors for a request
+      items:
+        type: object
+        description: An object representation of a response error
+        required:
+          - errorType
+          - errorValue
+          - errorMessage
+        properties:
+          errorType:
+            type: string
+            description: The category of error
+          errorValue:
+            type: string
+            description: The value which caused the error
+          errorMessage:
+            type: string
+            description: A detailed error message
+
+    Gyms:
+      type: array
+      description: A list of existing gym objects
+      items:
+        allOf:
+          - $ref: "#/components/schemas/SimplifiedGym"
+
+    BasicGym:
+      type: object
+      description: A basic object representation of a gym
+      required:
+        - name
+        - address
+        - avgRating
+      properties:
+        name:
+          type: string
+          description: The name of the gym
+        address:
+          type: object
+          description: The address of the gym
+          required:
+            - line1
+            - city
+            - county
+            - postcode
+          properties:
+            line1:
+              type: string
+              description: The first line of the address
+            line2:
+              type: string
+              description: The second line of the address
+            city:
+              type: string
+              description: The city of the address
+            county:
+              type: string
+              description: The county of the address
+            postcode:
+              type: string
+              description: The postcode of the address
+
+    SimplifiedGym:
+      allOf:
+        - $ref: "#/components/schemas/BasicGym"
+        - type: object
+          description: A simplified object representation of an existing gym
+          required:
+            - id
+          properties:
+            id:
+              type: integer
+              description: The auto-generated id of the gym
+            avgRating:
+              type: number
+              description: The average rating from reviews for the gym
+
+    ExtendedGym:
+      allOf:
+        - $ref: "#/components/schemas/SimplifiedGym"
+        - type: object
+          description: A detailed object representation of a gym
+          properties:
+            equipment:
+              type: array
+              description: A list of equipment within the gym
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/Equipment"
+            reviews:
+              type: array
+              description: A list of user submitted reviews for the gym
+              items:
+                allOf:
+                  - $ref: "#/components/schemas/Review"
+
+    Equipment:
+      type: object
+      description: An object representation of a piece of equipment
+      required:
+        - userId
+        - name
+        - quality
+      properties:
+        id:
+          type: integer
+          description: The auto-generated id of the equipment
+        gymId:
+          type: integer
+          description: The id of the parent gym
+        userId:
+          type: integer
+          description: The id of the owning user
+        name:
+          type: string
+          description: The name of the equipment
+        quality:
+          type: array
+          description: A list of quality submissions by users for this equipment
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Quality"
+        accuracy:
+          type: array
+          description: A list of accuracy submissions by users for this equipment
+          items:
+            allOf:
+              - $ref: "#/components/schemas/Accuracy"
+
+    Quality:
+      type: object
+      description: An object representation of a user rating on the equipment quality
+      required:
+        - userId
+        - rating
+      properties:
+        userId:
+          type: integer
+          description: The id of the owning user
+        rating:
+          type: integer
+          description: The rating from the user on the quality for this equipment
+
+    Accuracy:
+      type: object
+      description: An object representation of a user vote on the accuracy of this equipment submission
+      required:
+        - userId
+        - isCorrect
+      properties:
+        userId:
+          type: integer
+          description: The id of the owning user
+        isCorrect:
+          type: boolean
+          description: The vote from the user on the accuracy of this equipment submission
+
+    Review:
+      type: object
+      description: An object representation of a user review for this gym
+      required:
+        - userId
+        - rating
+        - content
+      properties:
+        id:
+          type: integer
+          description: The auto-generated id of the review
+        gymId:
+          type: integer
+          description: The id of the parent gym
+        userId:
+          type: integer
+          description: The id of the owning user
+        rating:
+          type: integer
+          description: The rating from the user for this gym
+        content:
+          type: string
+          description: The content of this review
+        votes:
+          type: array
+          description: A list of userIds of users who have submitted votes on the usefulness of this review
+          items:
+            type: integer
+            description: The id of the user who has submitted this vote
+
+    Vote:
+      type: object
+      description: An object representation of a user vote for a review's usefulness
+      required:
+        - userId
+      properties:
+        userId:
+          type: integer
+          description: The userId of the user voting

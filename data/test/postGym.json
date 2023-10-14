@@ -1,0 +1,9 @@
+{
+  "name": "The Test Gym",
+  "address": {
+    "line1": "15 Test Street",
+    "city": "Maldon",
+    "county": "Essex",
+    "postcode": "TS1 S31"
+  }
+}

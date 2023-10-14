@@ -1,0 +1,8 @@
+{
+  "userId": 1,
+  "name": "Test Equipment",
+  "quality": {
+    "userId": 1,
+    "rating": 6
+  }
+}
