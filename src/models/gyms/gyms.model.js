@@ -22,12 +22,16 @@ async function getAllGyms(searchQuery, { skip, limit }) {
       query?.length > 2
         ? {
             $or: [
-              { name: { $regex: new RegExp(query), $options: "i" } },
+              {
+                name: { $regex: new RegExp(query), $options: "i" },
+                isVisible: true,
+              },
               {
                 "address.postcode": {
                   $regex: new RegExp(query),
                   $options: "i",
                 },
+                isVisible: true,
               },
             ],
           }
@@ -35,6 +39,7 @@ async function getAllGyms(searchQuery, { skip, limit }) {
       {
         _id: 0,
         __v: 0,
+        isVisible: 0,
         "address._id": 0,
       }
     )
@@ -83,10 +88,11 @@ async function addNewGym(gym) {
         gymId: newGymId,
         ...gym,
         avgRating: null,
+        isVisible: false,
       },
       { upsert: true, new: true, returnOriginal: false }
     )
-    .select({ _id: 0, __v: 0, "address._id": 0 });
+    .select({ _id: 0, __v: 0, isVisible: 0, "address._id": 0 });
 }
 
 export { getAllGyms, getGymById, addNewGym };

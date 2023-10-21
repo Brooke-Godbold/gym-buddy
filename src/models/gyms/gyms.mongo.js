@@ -36,6 +36,10 @@ const gymsSchema = new mongoose.Schema({
     type: addressSchema,
     required: true,
   },
+  isVisible: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const gyms = mongoose.model("Gym", gymsSchema);

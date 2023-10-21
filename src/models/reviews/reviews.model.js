@@ -35,12 +35,13 @@ async function addReview(review, gymId) {
     gymId: Number(gymId),
     userId: Number(review.userId),
     rating: Number(review.rating),
+    summary: review.summary,
     content: review.content,
     votes: [],
   };
 
   return await reviews
-    .findOneAndUpdate({ reviewId: newReviewId }, newReview, {
+    .findOneAndUpdate({ userId: Number(review.userId) }, newReview, {
       upsert: true,
       new: true,
       returnOriginal: false,

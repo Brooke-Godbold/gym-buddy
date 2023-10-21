@@ -21,6 +21,10 @@ const reviewsSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  summary: {
+    type: String,
+    required: true,
+  },
   votes: {
     type: [Number],
     required: true,

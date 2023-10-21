@@ -22,7 +22,7 @@ async function getEquipmentById(equipmentId) {
 async function getEquipmentByGymId(gymId) {
   return await equipment.find(
     { gymId: gymId },
-    { _id: 0, __v: 0, "quality._id": 0 }
+    { _id: 0, __v: 0, "quality._id": 0, "accuracy._id": 0 }
   );
 }
 

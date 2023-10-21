@@ -40,24 +40,13 @@ const addReviewRules = [
   integerRule("userId", false, 0),
   integerRule("rating", false, 0, 10),
   stringRule("content"),
+  stringRule("summary"),
   param("id")
     .custom(async (value) => {
       const gym = await getGymById(value);
       if (!gym) return Promise.reject();
     })
     .withMessage((value) => `Unable to find gym resource with gymId ${value}`),
-  param("id")
-    .custom(async (value, { req }) => {
-      const existingUserReview = await getReviewByUserId(
-        value,
-        req.body.userId
-      );
-      if (existingUserReview) return Promise.reject();
-    })
-    .withMessage(
-      (value, { req }) =>
-        `Existing review found for gymId ${value} and userId ${req.body.userId}`
-    ),
 ];
 
 const voteReviewRules = [
