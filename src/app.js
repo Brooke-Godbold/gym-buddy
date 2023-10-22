@@ -97,6 +97,6 @@ app.use("/users", usersRouter);
 app.use("/gyms", gymsRouter);
 app.use("*", errorRouter);
 
-//app.use(errorHandler);
+app.use(errorHandler);
 
 export { app };

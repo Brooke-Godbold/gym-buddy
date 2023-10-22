@@ -59,7 +59,7 @@ Integration Tests are written using the Jest library. Supertest is used to make 
 
 ## CI Pipeline
 
-The CI Pipeline is configured with GutHub Actions. Upon each merge request, the GitHub Workflow will run the tests for the App, rejecting the merge request if the tests fail.
+The CI Pipeline is configured with GitHub Actions. Upon each merge request, the GitHub Workflow will run the tests for the App, rejecting the merge request if the tests fail.
 
 ## Database
 
