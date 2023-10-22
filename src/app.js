@@ -49,7 +49,7 @@ passport.deserializeUser((id, done) => {
 
 const app = express();
 
-const whitelist = ["http://localhost:5173"];
+const whitelist = ["http://localhost:5173", "https://fitness-view.netlify.app"];
 app.use(
   cors({
     origin: (origin, callback) => {
