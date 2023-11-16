@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, query } from "express-validator";
 
 const stringRule = (field, optional) =>
   body(field)
@@ -34,4 +34,28 @@ const booleanRule = (field, optional) =>
     .isBoolean()
     .withMessage(`Field ${field} must be a boolean`);
 
-export { stringRule, integerRule, booleanRule };
+const numericQueryRule = (queryValue, optional) =>
+  query(queryValue)
+    .optional(optional || false)
+    .isNumeric()
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage(`Query ${queryValue} must be provided`);
+
+const stringQueryRule = (queryValue, optional) =>
+  query(queryValue)
+    .optional(optional || false)
+    .isString()
+    .trim()
+    .not()
+    .isEmpty()
+    .withMessage(`Query ${queryValue} must be provided`);
+
+export {
+  stringRule,
+  integerRule,
+  booleanRule,
+  numericQueryRule,
+  stringQueryRule,
+};

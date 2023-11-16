@@ -12,6 +12,14 @@ async function getLatestReviewId() {
   return latestReview.reviewId;
 }
 
+async function getAllReviews({ skip, limit }) {
+  return await reviews
+    .find({})
+    .sort({ _id: -1 })
+    .limit(limit)
+    .select({ _id: 0, __v: 0 });
+}
+
 async function getReviewById(reviewId) {
   return await reviews.findOne({ reviewId: reviewId }, { _id: 0, __v: 0 });
 }
@@ -92,6 +100,7 @@ function averageRating(reviews) {
 }
 
 export {
+  getAllReviews,
   getReviewById,
   addReview,
   voteReview,

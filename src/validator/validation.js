@@ -1,10 +1,12 @@
-import { matchedData, param, validationResult } from "express-validator";
-import { booleanRule, integerRule, stringRule } from "./rules.js";
-import { getGymById } from "../models/gyms/gyms.model.js";
+import { matchedData, param, validationResult, query } from "express-validator";
 import {
-  getReviewById,
-  getReviewByUserId,
-} from "../models/reviews/reviews.model.js";
+  booleanRule,
+  integerRule,
+  numericQueryRule,
+  stringRule,
+} from "./rules.js";
+import { getGymById } from "../models/gyms/gyms.model.js";
+import { getReviewById } from "../models/reviews/reviews.model.js";
 import { getEquipmentById } from "../models/equipment/equipment.model.js";
 
 const getGymRules = [
@@ -24,6 +26,8 @@ const gymRules = [
   stringRule("address.county"),
   stringRule("address.postcode"),
 ];
+
+const getReviewsRules = [numericQueryRule("limit")];
 
 const getReviewRules = [
   param("id")
@@ -143,6 +147,7 @@ export {
   validate,
   getGymRules,
   gymRules,
+  getReviewsRules,
   getReviewRules,
   addReviewRules,
   voteReviewRules,

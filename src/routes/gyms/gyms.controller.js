@@ -5,6 +5,7 @@ import {
 } from "../../models/gyms/gyms.model.js";
 import {
   addReview,
+  getAllReviews,
   getReviewById,
   voteReview,
 } from "../../models/reviews/reviews.model.js";
@@ -27,6 +28,10 @@ async function httpGetGymById(req, res) {
 
 async function httpAddGym(req, res) {
   return res.status(201).json(await addNewGym(req.body));
+}
+
+async function httpGetAllReviews(req, res) {
+  return res.status(200).json(await getAllReviews(getPagination(req.query)));
 }
 
 async function httpGetReview(req, res) {
@@ -61,6 +66,7 @@ export {
   httpGetAllGyms,
   httpGetGymById,
   httpAddGym,
+  httpGetAllReviews,
   httpGetReview,
   httpAddReview,
   httpVoteReview,

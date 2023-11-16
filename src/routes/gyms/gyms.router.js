@@ -4,6 +4,7 @@ import {
   httpAddGym,
   httpAddReview,
   httpGetAllGyms,
+  httpGetAllReviews,
   httpGetGymById,
   httpGetReview,
   httpVoteEquipmentAccuracy,
@@ -20,12 +21,14 @@ import {
   voteEquipmentQualityRules,
   getGymRules,
   getReviewRules,
+  getReviewsRules,
 } from "../../validator/validation.js";
 import { authCheck } from "../../middleware/authHandler.js";
 
 const gymsRouter = express.Router();
 
 gymsRouter.get("/", httpGetAllGyms);
+gymsRouter.get("/reviews", getReviewsRules, validate, httpGetAllReviews);
 gymsRouter.get("/:id", getGymRules, validate, httpGetGymById);
 
 gymsRouter.post("/", gymRules, validate, authCheck, httpAddGym);
